@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PizzaMixin.iml" filepath="$PROJECT_DIR$/.idea/modules/PizzaMixin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PizzaMixin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/PizzaMixin_main.iml" group="PizzaMixin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/PizzaMixin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/PizzaMixin_test.iml" group="PizzaMixin" />
+    </modules>
+  </component>
+</project>
