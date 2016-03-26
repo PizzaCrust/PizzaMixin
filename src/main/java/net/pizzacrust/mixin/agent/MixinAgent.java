@@ -8,7 +8,8 @@ import java.lang.instrument.Instrumentation;
  * @since 1.0-SNAPSHOT
  * @author PizzaCrust
  */
-public class MixinAgent {
+public class MixinAgent
+{
     /**
      * The method that Java calls to execute this agent.
      * @param agentArguments the arguments, that the executor passed on to Java

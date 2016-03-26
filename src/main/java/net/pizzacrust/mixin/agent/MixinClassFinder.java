@@ -11,7 +11,8 @@ import java.util.ArrayList;
  * @since 1.0-SNAPSHOT
  * @author PizzaCrust
  */
-public class MixinClassFinder {
+public class MixinClassFinder
+{
     /**
      * The instrumentation object that allows us to instrument with the class loader.
      */
