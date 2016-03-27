@@ -6,18 +6,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Identifies a class for as a Mixin.
+ * Represents a field initalizer.
  *
  * @since 1.0-SNAPSHOT
  * @author PizzaCrust
  */
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mixin
-{
+public @interface FieldInitalizer {
     /**
-     * The target class of the Mixin.
-     * @return the target class
+     * The java source code of the inititalizer.
+     * Example: new java.lang.String("test");
+     * @return the source
      */
     String value();
 }

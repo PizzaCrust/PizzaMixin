@@ -3,9 +3,13 @@ package net.pizzacrust.mixin;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtField;
+import javassist.bytecode.Descriptor;
+import javassist.bytecode.FieldInfo;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Transforms target class of a specified Mixin.
@@ -19,19 +23,19 @@ public class MixinTransformer
     /**
      * Represents the target class of the Mixin.
      */
-    private Class<?> targetClass;
+    private CtClass targetClass;
     /**
      * Represents the mixin class.
      */
-    private Class<?> mixinClass;
+    private CtClass mixinClass;
 
     /**
      * Constructs a new {@link MixinTransformer} object.
      * @param targetClass the target class of mixin
      * @param mixinClass the mixin class
      */
-    public MixinTransformer(Class<?> targetClass, Class<?> mixinClass) {
-        this.targetClass = targetClass;
+    public MixinTransformer(String targetClass, CtClass mixinClass) throws Exception {
+        this.targetClass = ClassPool.getDefault().getCtClass(targetClass);
         this.mixinClass = mixinClass;
     }
 
@@ -46,8 +50,12 @@ public class MixinTransformer
         CtClass mixinCtClass = ClassPool.getDefault().getCtClass(mixinClass.getName());
         for (CtField field : mixinCtClass.getDeclaredFields()) {
             if (!field.hasAnnotation(MixinBridge.class)) {
-                targetCtClass.addField(field);
+                FieldInitalizer fieldInitalizer = (FieldInitalizer) field.getAnnotation(FieldInitalizer.class);
+                CtField ctField = new CtField(field.getType(), field.getName(), targetCtClass);
+                targetCtClass.addField(ctField, CtField.Initializer.byExpr(fieldInitalizer.value()));
             }
         }
+        System.out.println("Mixin -> Inserting " + targetClass.getName() + " into class loader...");
+        targetCtClass.toClass();
     }
 }

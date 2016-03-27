@@ -1,5 +1,6 @@
 package net.pizzacrust.mixin.test;
 
+import net.pizzacrust.mixin.FieldInitalizer;
 import net.pizzacrust.mixin.IgnoreMethod;
 import net.pizzacrust.mixin.Mixin;
 
@@ -11,10 +12,11 @@ import java.lang.reflect.Field;
  * @since 1.0-SNAPSHOT
  * @author PizzaCrust
  */
-@Mixin(MixinTest.Victim.class)
+@Mixin("net.pizzacrust.mixin.test.MixinTest.Victim")
 public class MixinTest
 {
-    public String test = "meow";
+    @FieldInitalizer("\"meow\"")
+    public String test;
 
     @IgnoreMethod
     public static void main(String[] args) throws Exception {
