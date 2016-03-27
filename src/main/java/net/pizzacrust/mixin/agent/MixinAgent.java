@@ -1,5 +1,8 @@
 package net.pizzacrust.mixin.agent;
 
+import net.pizzacrust.mixin.Mixin;
+import net.pizzacrust.mixin.MixinTransformer;
+
 import java.lang.instrument.Instrumentation;
 
 /**
@@ -19,6 +22,15 @@ public class MixinAgent
         System.out.println("MixinAgent -> Detecting Mixins...");
         MixinClassFinder finder = new MixinClassFinder(instrumentation);
         Class<?>[] mixins = finder.find();
-        System.out.println("MixinAgent -> Detected " + mixins.length + " mixins.");
+        System.out.println("MixinAgent -> Moving into transformation stage...");
+        for (Class mixinClass : mixins) {
+            Mixin annotation = (Mixin) mixinClass.getAnnotation(Mixin.class);
+            MixinTransformer transformer = new MixinTransformer(annotation.value(), mixinClass);
+            try {
+                transformer.transform();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
