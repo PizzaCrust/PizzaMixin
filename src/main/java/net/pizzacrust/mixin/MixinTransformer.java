@@ -1,8 +1,6 @@
 package net.pizzacrust.mixin;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
+import javassist.*;
 import javassist.bytecode.Descriptor;
 import javassist.bytecode.FieldInfo;
 
@@ -53,6 +51,15 @@ public class MixinTransformer
                 FieldInitalizer fieldInitalizer = (FieldInitalizer) field.getAnnotation(FieldInitalizer.class);
                 CtField ctField = new CtField(field.getType(), field.getName(), targetCtClass);
                 targetCtClass.addField(ctField, CtField.Initializer.byExpr(fieldInitalizer.value()));
+            }
+        }
+        System.out.println(targetClass.getName() + " -> Adding Mixin methods...");
+        for (CtMethod method : mixinCtClass.getDeclaredMethods()) {
+            if (!method.hasAnnotation(IgnoreMethod.class) || !method.hasAnnotation(MixinBridge.class)) {
+                MethodBody methodBody = (MethodBody) method.getAnnotation(MethodBody.class);
+                CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
+                newMethod.setBody(methodBody.value());
+                targetClass.addMethod(newMethod);
             }
         }
         System.out.println("Mixin -> Inserting " + targetClass.getName() + " into class loader...");
