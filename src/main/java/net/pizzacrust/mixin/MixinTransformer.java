@@ -62,6 +62,18 @@ public class MixinTransformer
                 targetClass.addMethod(newMethod);
             }
         }
+        System.out.println(targetClass.getName() + " -> Modifying target hierarchy...");
+        for (CtClass interfaceType : mixinCtClass.getInterfaces()) {
+            boolean isAlreadyImplemented = false;
+            for(CtClass targetInterface : targetCtClass.getInterfaces()) {
+                if (targetInterface == interfaceType) {
+                    isAlreadyImplemented = true;
+                }
+            }
+            if (!isAlreadyImplemented) {
+                targetCtClass.addInterface(interfaceType);
+            }
+        }
         System.out.println("Mixin -> Inserting " + targetClass.getName() + " into class loader...");
         targetCtClass.toClass();
     }
