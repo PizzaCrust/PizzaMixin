@@ -73,14 +73,18 @@ public class MixinTransformer {
         CtClass mixinCtClass = ClassPool.getDefault().getCtClass(mixinClass.getName());
         for (CtField field : mixinCtClass.getDeclaredFields()) {
             if (!field.hasAnnotation(MixinBridge.class)) {
-                FieldInitalizer fieldInitalizer = (FieldInitalizer) field.getAnnotation(FieldInitalizer.class);
-                CtField ctField = new CtField(field.getType(), field.getName(), targetCtClass);
+                CtField ctField = new CtField(field, targetCtClass);
                 if (doesFieldAlreadyExists(ctField, targetCtClass)) {
-                    for (CtConstructor constructor : targetCtClass.getDeclaredConstructors()) {
-                        constructor.insertAfter(ctField.getName() + " = " + fieldInitalizer.value() + ";");
+                    for (CtField field1 : targetCtClass.getDeclaredFields()) {
+                        if (field1.getType() == field.getType() && field1.getName().equals(field.getName())) {
+                            FieldInitalizer fieldInitalizer = (FieldInitalizer) field.getAnnotation(FieldInitalizer.class); // field init is now only used for overriding fields because of JASSIST-140
+                            for (CtConstructor constructor : targetCtClass.getDeclaredConstructors()) {
+                                constructor.insertAfter(field.getName() + " = " + fieldInitalizer.value() + ";");
+                            }
+                        }
                     }
                 } else {
-                    targetCtClass.addField(ctField, CtField.Initializer.byExpr(fieldInitalizer.value()));
+                    targetCtClass.addField(ctField);
                 }
             }
         }

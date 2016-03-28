@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 public @interface FieldInitalizer {
     /**
      * The java source code of the inititalizer.
-     * Example: new java.lang.String("test");
+     * Example: new java.lang.String("test")
      * @return the source
      */
     String value();
