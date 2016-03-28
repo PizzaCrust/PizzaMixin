@@ -56,9 +56,9 @@ public class MixinTransformer
         System.out.println(targetClass.getName() + " -> Adding Mixin methods...");
         for (CtMethod method : mixinCtClass.getDeclaredMethods()) {
             if (!method.hasAnnotation(IgnoreMethod.class) || !method.hasAnnotation(MixinBridge.class)) {
-                MethodBody methodBody = (MethodBody) method.getAnnotation(MethodBody.class);
-                CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
-                newMethod.setBody(methodBody.value());
+                //CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
+                //newMethod.setBody(methodBody.value());
+                CtMethod newMethod = CtNewMethod.copy(method, targetCtClass, null);
                 targetClass.addMethod(newMethod);
             }
         }
