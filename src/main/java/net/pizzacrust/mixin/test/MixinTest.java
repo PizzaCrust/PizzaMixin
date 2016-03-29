@@ -1,5 +1,6 @@
 package net.pizzacrust.mixin.test;
 
+import net.pizzacrust.mixin.FieldInitalizer;
 import net.pizzacrust.mixin.IgnoreMethod;
 import net.pizzacrust.mixin.Mixin;
 
@@ -15,6 +16,9 @@ import java.lang.reflect.Field;
 public class MixinTest
 {
     public String test = "meow";
+
+    @FieldInitalizer("\"New value!\"")
+    public String name;
 
     @IgnoreMethod
     public static void main(String[] args) throws Exception {
