@@ -90,15 +90,36 @@ public class MixinTransformer {
         }
         System.out.println(targetClass.getName() + " -> Adding Mixin methods...");
         for (CtMethod method : mixinCtClass.getDeclaredMethods()) {
-            if (!method.hasAnnotation(IgnoreMethod.class) || !method.hasAnnotation(MixinBridge.class)) {
+            if (method.hasAnnotation(Inject.class) && Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers()) && method.getReturnType() == CtClass.voidType) {
                 if (doesMethodAlreadyExists(method, targetCtClass)) {
-                    CtMethod ctMethod = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
-                    targetCtClass.removeMethod(ctMethod);
+                    Inject annotation = (Inject) method.getAnnotation(Inject.class);
+                    CtMethod methodInTargetClass = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                    switch (annotation.value()) {
+                        case AFTER:
+                            methodInTargetClass.insertAfter(method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            break;
+                        case BEFORE:
+                            methodInTargetClass.insertBefore(method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            break;
+                        case CUSTOM:
+                            int line = annotation.line();
+                            methodInTargetClass.insertAt(line, method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            break;
+                    }
+                } else {
+                    System.out.println("MixinTransformer -> Error -> Retrieved a invalid @Inject annotation on: " + method.getName());
                 }
-                //CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
-                //newMethod.setBody(methodBody.value());
-                CtMethod newMethod = CtNewMethod.copy(method, targetCtClass, null);
-                targetClass.addMethod(newMethod);
+            } else {
+                if (!method.hasAnnotation(IgnoreMethod.class) || !method.hasAnnotation(MixinBridge.class) || !method.hasAnnotation(Inject.class)) {
+                    if (doesMethodAlreadyExists(method, targetCtClass)) {
+                        CtMethod ctMethod = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                        targetCtClass.removeMethod(ctMethod);
+                    }
+                    //CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
+                    //newMethod.setBody(methodBody.value());
+                    CtMethod newMethod = CtNewMethod.copy(method, targetCtClass, null);
+                    targetClass.addMethod(newMethod);
+                }
             }
         }
         System.out.println(targetClass.getName() + " -> Modifying target hierarchy...");
