@@ -8,15 +8,15 @@ import java.lang.annotation.Target;
 /**
  * Identifies a class for as a Mixin.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mixin
-{
+public @interface Mixin {
     /**
      * The target class of the Mixin.
+     *
      * @return the target class
      */
     String value();

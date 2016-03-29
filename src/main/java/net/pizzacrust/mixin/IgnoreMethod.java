@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Tells the transformer to ignore the method inside of a Mixin.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

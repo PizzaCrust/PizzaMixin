@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 /**
  * Injects to the target class. Method must be public, static, and void. And also, be the same method name and parameters as in the target class.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -17,6 +17,7 @@ public @interface Inject {
 
     /**
      * The execution type.
+     *
      * @return execution type
      */
     Execution value();
@@ -24,6 +25,7 @@ public @interface Inject {
     /**
      * Only applicable when Execution is CUSTOM.
      * The line of the injected code.
+     *
      * @return the line
      */
     int line() default 0;

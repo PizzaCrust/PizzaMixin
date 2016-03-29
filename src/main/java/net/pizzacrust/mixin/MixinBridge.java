@@ -8,9 +8,10 @@ import java.lang.annotation.Target;
 /**
  * Bridges from the target class to the Mixin class. It can be a {@link java.lang.reflect.Field} or {@link java.lang.reflect.Method}.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MixinBridge {}
+public @interface MixinBridge {
+}

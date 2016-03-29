@@ -9,12 +9,11 @@ import java.lang.reflect.Field;
 /**
  * A test of the Mixin framework.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
 @Mixin("net.pizzacrust.mixin.test.MixinTest.Victim")
-public class MixinTest
-{
+public class MixinTest {
     public String test = "meow";
 
     @FieldInitalizer("\"New value!\"")

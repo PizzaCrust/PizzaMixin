@@ -15,13 +15,13 @@ import java.util.jar.JarInputStream;
 /**
  * Allows for Mixins to be processed before the application starts.
  *
- * @since 1.0-SNAPSHOT
  * @author PizzaCrust
+ * @since 1.0-SNAPSHOT
  */
-public class MixinAgent
-{
+public class MixinAgent {
     /**
      * Retrieves all classes inside of a JAR.
+     *
      * @param jarName the jar
      * @return the classes
      * @throws Exception if something goes wrong
@@ -32,7 +32,7 @@ public class MixinAgent
 
         ArrayList<String> classNames = new ArrayList<String>();
 
-        while(true) {
+        while (true) {
             jarEntry = input.getNextJarEntry();
             if (jarEntry == null) {
                 break;
@@ -49,7 +49,8 @@ public class MixinAgent
 
     /**
      * The method that Java calls to execute this agent.
-     * @param agentArguments the arguments, that the executor passed on to Java
+     *
+     * @param agentArguments  the arguments, that the executor passed on to Java
      * @param instrumentation the instrumentation object
      */
     public static void premain(String agentArguments, Instrumentation instrumentation) {
