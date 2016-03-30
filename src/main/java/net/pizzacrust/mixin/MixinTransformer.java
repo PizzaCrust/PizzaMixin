@@ -95,7 +95,7 @@ public class MixinTransformer {
         }
         System.out.println(targetClass.getName() + " -> Adding Mixin methods...");
         for (CtMethod method : mixinCtClass.getDeclaredMethods()) {
-            if (method.hasAnnotation(Inject.class) && Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers()) && method.getReturnType() == CtClass.voidType) {
+            if (method.hasAnnotation(Inject.class)) {
                 if (doesMethodAlreadyExists(method, targetCtClass)) {
                     Inject annotation = (Inject) method.getAnnotation(Inject.class);
                     CtMethod methodInTargetClass;
@@ -107,14 +107,14 @@ public class MixinTransformer {
                     }
                     switch (annotation.value()) {
                         case AFTER:
-                            methodInTargetClass.insertAfter(method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            methodInTargetClass.insertAfter("new " + method.getDeclaringClass().getName() + "($0)." + method.getName() + "($$);");
                             break;
                         case BEFORE:
-                            methodInTargetClass.insertBefore(method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            methodInTargetClass.insertBefore("new " + method.getDeclaringClass().getName() + "($0)." + method.getName() + "($$);");
                             break;
                         case CUSTOM:
                             int line = annotation.line();
-                            methodInTargetClass.insertAt(line, method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
+                            methodInTargetClass.insertAt(line, "new " + method.getDeclaringClass().getName() + "($0)." + method.getName() + "($$);");
                             break;
                     }
                 } else {

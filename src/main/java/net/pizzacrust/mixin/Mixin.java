@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Identifies a class for as a Mixin.
+ * Must have a constructor w/ a {@link Object} as the ONLY parameter.
  *
  * @author PizzaCrust
  * @since 1.0-SNAPSHOT

@@ -19,6 +19,10 @@ public class MixinTest {
     @FieldInitalizer("\"New value!\"")
     public String name;
 
+    public MixinTest(Object thisObj) {
+
+    }
+
     @IgnoreMethod
     public static void main(String[] args) throws Exception {
         for (Field field : MixinTest.Victim.class.getDeclaredFields()) {
