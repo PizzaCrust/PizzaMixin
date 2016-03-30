@@ -40,8 +40,13 @@ public class MixinTransformer {
      */
     private boolean doesMethodAlreadyExists(CtMethod method, CtClass ctClass) {
         try {
-            ctClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
-        } catch (NotFoundException e) {
+            if (method.hasAnnotation(MethodName.class)) {
+                MethodName methodName = (MethodName) method.getAnnotation(MethodName.class);
+                ctClass.getDeclaredMethod(methodName.value(), method.getParameterTypes());
+            } else {
+                ctClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+            }
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -93,7 +98,13 @@ public class MixinTransformer {
             if (method.hasAnnotation(Inject.class) && Modifier.isPublic(method.getModifiers()) && Modifier.isStatic(method.getModifiers()) && method.getReturnType() == CtClass.voidType) {
                 if (doesMethodAlreadyExists(method, targetCtClass)) {
                     Inject annotation = (Inject) method.getAnnotation(Inject.class);
-                    CtMethod methodInTargetClass = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                    CtMethod methodInTargetClass;
+                    if (method.hasAnnotation(MethodName.class)) {
+                        MethodName methodName = (MethodName) method.getAnnotation(MethodName.class);
+                        methodInTargetClass = targetCtClass.getDeclaredMethod(methodName.value(), method.getParameterTypes());
+                    } else {
+                       methodInTargetClass = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                    }
                     switch (annotation.value()) {
                         case AFTER:
                             methodInTargetClass.insertAfter(method.getDeclaringClass().getName() + "." + method.getName() + "($$);");
@@ -112,12 +123,24 @@ public class MixinTransformer {
             } else {
                 if (!method.hasAnnotation(IgnoreMethod.class) || !method.hasAnnotation(MixinBridge.class) || !method.hasAnnotation(Inject.class)) {
                     if (doesMethodAlreadyExists(method, targetCtClass)) {
-                        CtMethod ctMethod = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                        CtMethod ctMethod;
+                        if (method.hasAnnotation(MethodName.class)) {
+                            MethodName methodName = (MethodName) method.getAnnotation(MethodName.class);
+                            ctMethod = targetCtClass.getDeclaredMethod(methodName.value(), method.getParameterTypes());
+                        } else {
+                           ctMethod = targetCtClass.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                        }
                         targetCtClass.removeMethod(ctMethod);
                     }
                     //CtMethod newMethod = new CtMethod(method.getReturnType(), method.getName(), method.getParameterTypes(), targetCtClass);
                     //newMethod.setBody(methodBody.value());
-                    CtMethod newMethod = CtNewMethod.copy(method, targetCtClass, null);
+                    CtMethod newMethod;
+                    if (method.hasAnnotation(MethodName.class)) {
+                        MethodName methodName = (MethodName) method.getAnnotation(MethodName.class);
+                        newMethod = CtNewMethod.copy(method, methodName.value(), targetCtClass, null);
+                    } else {
+                        newMethod = CtNewMethod.copy(method, targetCtClass, null);
+                    }
                     targetClass.addMethod(newMethod);
                 }
             }
