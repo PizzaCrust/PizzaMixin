@@ -2,6 +2,7 @@ group 'net.pizzacrust'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'com.bmuschko.nexus'
 
 repositories {
     mavenCentral()
@@ -9,6 +10,15 @@ repositories {
 
 dependencies {
     compile 'org.javassist:javassist:3.20.0-GA'
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+    }
 }
 
 jar {
@@ -23,4 +33,10 @@ jar {
             it.isDirectory() ? it : zipTree(it)
         }
     }
+}
+
+nexus {
+    sign = false
+    repositoryUrl = 'http://pizzacrustrepo.gq/content/repositories/snapshots/'
+    snapshotRepositoryUrl = 'http://pizzacrustrepo.gq/content/repositories/snapshots/'
 }
